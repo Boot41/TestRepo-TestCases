@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import EmployerDashboard from './pages/EmployerDashboard';
 import CandidateDashboard from './pages/CandidateDashboard';
 import JobSearchResultsPage from './pages/JobSearchResultsPage';
+import JobDetailsPage from './pages/JobDetailsPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Link to="/employer-dashboard">Employer Dashboard</Link>
             <Link to="/candidate-dashboard">Candidate Dashboard</Link>
             <Link to="/job-search-results">Job Search Results</Link>
+            <Link to="/job-details">Job Details</Link>
           </nav>
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -33,6 +35,7 @@ function App() {
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
           <Route path="/job-search-results" element={<JobSearchResultsPage />} />
+          <Route path="/job-details" element={<JobDetailsPage />} />
           <Route path="/" element={<div>Home Page</div>} />
         </Routes>
       </div>

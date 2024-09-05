@@ -5,6 +5,7 @@ import EmployerDashboard from './pages/EmployerDashboard';
 import CandidateDashboard from './pages/CandidateDashboard';
 import JobSearchResultsPage from './pages/JobSearchResultsPage';
 import JobDetailsPage from './pages/JobDetailsPage';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Link to="/candidate-dashboard">Candidate Dashboard</Link>
             <Link to="/job-search-results">Job Search Results</Link>
             <Link to="/job-details">Job Details</Link>
+            <Link to="/admin-dashboard">Admin Dashboard</Link>
           </nav>
           <img src={logo} className="App-logo" alt="logo" />
           <p>
@@ -36,6 +38,7 @@ function App() {
           <Route path="/candidate-dashboard" element={<CandidateDashboard />} />
           <Route path="/job-search-results" element={<JobSearchResultsPage />} />
           <Route path="/job-details" element={<JobDetailsPage />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/" element={<div>Home Page</div>} />
         </Routes>
       </div>

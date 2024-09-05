@@ -7,10 +7,10 @@ import ComplianceAlert from '../components/ComplianceAlert';
 
 const AdminDashboard = () => {
     return (
-        <div className="font-['Roboto'] bg-[#F5F5F5] min-h-screen">
+        <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#F5F5F5', fontFamily: '"Roboto", sans-serif' }}>
             <Header />
-            <main className="container mx-auto p-[24px]">
-                <h1 className="text-[#212121] text-[24px] font-[700] mb-[16px]">Admin Dashboard</h1>
+            <main className="flex-grow p-6 max-w-screen-lg mx-auto" style={{ backgroundColor: '#FFFFFF' }}>
+                <h1 className="text-heading text-2xl font-bold mb-6" style={{ color: '#212121' }}>Admin Dashboard</h1>
                 <ComplianceAlert />
                 <AdminJobOverview />
                 <JobStatusUpdate />

@@ -1,13 +1,13 @@
 from django.test import TestCase
-from .models import Job
+from .models import Job, Application
 
-class JobModelTest(TestCase):
-    def setUp(self):
-        self.job = Job.objects.create(title='Software Engineer', description='Develop software applications.', employer_id=1)
+class JobModelTests(TestCase):
+    def test_job_creation(self):
+        job = Job.objects.create(title='Software Engineer', description='Develop software', location='Remote', job_type='full-time')
+        self.assertIsInstance(job, Job)
 
-    def test_job_str(self):
-        self.assertEqual(str(self.job), 'Software Engineer')
-
-    def test_job_fields(self):
-        self.assertEqual(self.job.title, 'Software Engineer')
-        self.assertEqual(self.job.description, 'Develop software applications.')
+class ApplicationModelTests(TestCase):
+    def test_application_creation(self):
+        job = Job.objects.create(title='Software Engineer', description='Develop software', location='Remote', job_type='full-time')
+        application = Application.objects.create(candidate_name='John Doe', candidate_email='john.doe@example.com', job=job)
+        self.assertIsInstance(application, Application)

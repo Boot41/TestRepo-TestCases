@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import Job
-from .serializers import JobSerializer
+from .models import Job, Application
+from .serializers import JobSerializer, ApplicationSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
@@ -41,4 +41,22 @@ class JobViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
         job = self.get_object()
         serializer = self.get_serializer(job)
+        return Response(serializer.data)
+
+class ApplicationViewSet(viewsets.ModelViewSet):
+    serializer_class = ApplicationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, job_id=None):
+        job = Job.objects.get(id=job_id)
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(job=job)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'], url_path='candidates/(?P<candidate_id>[^/.]+?)')
+    def list_applications(self, request, candidate_id=None):
+        applications = Application.objects.filter(candidate_email=candidate_id)
+        serializer = self.get_serializer(applications, many=True)
         return Response(serializer.data)

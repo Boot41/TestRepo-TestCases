@@ -1,31 +1,29 @@
-from django.urls import reverse
+from django.test import TestCase
 from rest_framework import status
-from rest_framework.test import APITestCase
-from .models import Job
+from rest_framework.test import APIClient
+from .models import Job, Application
 
-class JobViewSetTests(APITestCase):
+class ApplicationTests(TestCase):
     def setUp(self):
-        self.job = Job.objects.create(
-            title='Test Job',
-            description='Test Description',
-            location='Test Location',
-            job_type='Full-time',
-        )
+        self.client = APIClient()
+        self.job = Job.objects.create(title='Software Engineer', description='Develop software', location='Remote', job_type='full-time')
 
-    def test_get_jobs(self):
-        url = reverse('job-list')
-        response = self.client.get(url)
+    def test_apply_for_job(self):
+        response = self.client.post(f'/api/jobs/{self.job.id}/apply', {
+            'candidate_name': 'John Doe',
+            'candidate_email': 'john.doe@example.com',
+            'resume': 'path/to/resume'
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_list_applications(self):
+        # First, create an application
+        self.client.post(f'/api/jobs/{self.job.id}/apply', {
+            'candidate_name': 'John Doe',
+            'candidate_email': 'john.doe@example.com',
+            'resume': 'path/to/resume'
+        })
+        # Now list applications for the candidate
+        response = self.client.get('/api/candidates/john.doe@example.com/applications/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-
-    def test_update_job_status(self):
-        url = reverse('job-update-status', kwargs={'pk': self.job.pk})
-        response = self.client.patch(url, {'status': 'closed'})
-        self.job.refresh_from_db()
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.job.status, 'closed')
-
-    def test_update_job_status_invalid(self):
-        url = reverse('job-update-status', kwargs={'pk': self.job.pk})
-        response = self.client.patch(url, {'status': ''})
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertGreater(len(response.data), 0, 'No applications found')

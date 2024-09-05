@@ -5,9 +5,11 @@ class Job(models.Model):
     description = models.TextField()
     location = models.CharField(max_length=255)
     job_type = models.CharField(max_length=50)
-    status = models.CharField(max_length=50, default='active')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=50, default='open')
 
-    def __str__(self):
-        return self.title
+class Application(models.Model):
+    candidate_name = models.CharField(max_length=255)
+    candidate_email = models.EmailField()
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    resume = models.FileField(upload_to='resumes/')

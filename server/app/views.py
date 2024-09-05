@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from .models import Job
 from .serializers import JobSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
@@ -11,7 +12,7 @@ class JobViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]  
 
     @action(detail=False, methods=['get'])
-    def search(self, request):
+    def index(self, request):
         keywords = request.query_params.get('keywords', '')
         location = request.query_params.get('location', '')
         job_type = request.query_params.get('job_type', '')
@@ -26,6 +27,16 @@ class JobViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(jobs, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['patch'])
+    def update_status(self, request, job_id=None):
+        job = self.get_object()
+        new_status = request.data.get('status')
+        if new_status:
+            job.status = new_status
+            job.save()
+            return Response({'status': 'status updated'}, status=status.HTTP_200_OK)
+        return Response({'error': 'Invalid status'}, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
         job = self.get_object()

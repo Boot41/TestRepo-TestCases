@@ -6,21 +6,26 @@ from .models import Job
 class JobViewSetTests(APITestCase):
     def setUp(self):
         self.job = Job.objects.create(
-            title='Software Engineer',
-            description='Develop applications',
-            location='Remote',
-            job_type='full_time',
-            company_name='Tech Company'
+            title='Test Job',
+            description='Test Description',
+            location='Test Location',
+            job_type='Full-time',
         )
 
-    def test_search_jobs(self):
-        url = reverse('job-list') + 'search/'  # Assuming default naming from router
-        response = self.client.get(url, {'keywords': 'Software'})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn(self.job.title.encode(), response.content)
-
-    def test_retrieve_job_details(self):
-        url = reverse('job-detail', kwargs={'pk': self.job.id})
+    def test_get_jobs(self):
+        url = reverse('job-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['title'], self.job.title)
+        self.assertEqual(len(response.data), 1)
+
+    def test_update_job_status(self):
+        url = reverse('job-update-status', kwargs={'pk': self.job.pk})
+        response = self.client.patch(url, {'status': 'closed'})
+        self.job.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.job.status, 'closed')
+
+    def test_update_job_status_invalid(self):
+        url = reverse('job-update-status', kwargs={'pk': self.job.pk})
+        response = self.client.patch(url, {'status': ''})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

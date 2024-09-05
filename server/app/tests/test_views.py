@@ -1,29 +1,33 @@
-from django.test import TestCase
 from rest_framework import status
-from rest_framework.test import APIClient
-from .models import Job, Application
+from rest_framework.test import APITestCase
+from .models import Job, Application, Notification
 
-class ApplicationTests(TestCase):
+class NotificationTests(APITestCase):
+
     def setUp(self):
-        self.client = APIClient()
-        self.job = Job.objects.create(title='Software Engineer', description='Develop software', location='Remote', job_type='full-time')
+        self.job = Job.objects.create(title='Test Job', description='Test Description', location='Test Location', job_type='Full-time')
+        self.application_data = {'candidate_email': 'test@example.com'}
 
-    def test_apply_for_job(self):
-        response = self.client.post(f'/api/jobs/{self.job.id}/apply', {
-            'candidate_name': 'John Doe',
-            'candidate_email': 'john.doe@example.com',
-            'resume': 'path/to/resume'
-        })
+    def test_create_application_and_notification(self):
+        response = self.client.post(f'/api/jobs/{self.job.id}/applications/', self.application_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        notification = Notification.objects.first()
+        self.assertIsNotNone(notification)
+        self.assertEqual(notification.employer_id, self.job.id)
 
-    def test_list_applications(self):
-        # First, create an application
-        self.client.post(f'/api/jobs/{self.job.id}/apply', {
-            'candidate_name': 'John Doe',
-            'candidate_email': 'john.doe@example.com',
-            'resume': 'path/to/resume'
-        })
-        # Now list applications for the candidate
-        response = self.client.get('/api/candidates/john.doe@example.com/applications/')
+    def test_fetch_notifications(self):
+        application = Application.objects.create(job=self.job, candidate_email='test2@example.com')
+        Notification.objects.create(employer_id=self.job.id, application=application)
+
+        response = self.client.get(f'/api/employers/{self.job.id}/notifications/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertGreater(len(response.data), 0, 'No applications found')
+        self.assertGreater(len(response.data), 0)
+
+    def test_mark_notification_as_read(self):
+        application = Application.objects.create(job=self.job, candidate_email='test3@example.com')
+        notification = Notification.objects.create(employer_id=self.job.id, application=application)
+
+        response = self.client.patch(f'/api/employers/{self.job.id}/notifications/{notification.id}/read/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        notification.refresh_from_db()
+        self.assertTrue(notification.is_read)

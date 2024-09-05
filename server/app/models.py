@@ -7,9 +7,22 @@ class Job(models.Model):
     job_type = models.CharField(max_length=50)
     status = models.CharField(max_length=50, default='open')
 
+    def __str__(self):
+        return self.title
+
 class Application(models.Model):
-    candidate_name = models.CharField(max_length=255)
+    job = models.ForeignKey(Job, related_name='applications', on_delete=models.CASCADE)
     candidate_email = models.EmailField()
-    job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    submitted_at = models.DateTimeField(auto_now_add=True)
-    resume = models.FileField(upload_to='resumes/')
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.candidate_email} applied for {self.job.title}'
+
+class Notification(models.Model):
+    employer_id = models.IntegerField()
+    application = models.ForeignKey(Application, related_name='notifications', on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f'Notification for Employer {self.employer_id} about {self.application}'

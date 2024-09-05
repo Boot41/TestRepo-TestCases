@@ -3,21 +3,34 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import JobPostingForm from '../components/JobPostingForm';
 import JobListingManager from '../components/JobListingManager';
+import JobPostSuccessNotification from '../components/JobPostSuccessNotification';
 
 const EmployerDashboard = () => {
     return (
-        <div className="bg-white min-h-screen font-roboto">
+        <div className="flex flex-col h-screen bg-primaryBackground font-roboto">
+            {/* Header section */}
             <Header />
-            <main className="px-6 py-6">
-                <h1 className="text-2xl font-bold text-gray-800 mb-4">Employer Dashboard</h1>
-                <p className="text-gray-600 mb-6">The EmployerDashboard page provides a holistic job management experience by incorporating essential components, including a Header for navigation, a Footer for supplementary information, a JobPostingForm for creating new listings, and the JobListingManager for overseeing existing postings.</p>
-                <div className="bg-gray-100 p-4 rounded-md shadow-md mb-6">
-                    <JobPostingForm />
-                </div>
-                <div className="bg-gray-100 p-4 rounded-md shadow-md">
-                    <JobListingManager />
-                </div>
+            
+            {/* Main content area */}
+            <main className="flex-grow p-medium">
+                <h1 className="text-heading text-24 font-heading mb-medium">Employer Dashboard</h1>
+                <p className="text-body text-14 mb-large">
+                    The EmployerDashboard page provides a comprehensive job management experience, incorporating components such as
+                    Header, Footer, JobPostingForm, JobListingManager, and the newly designed JobPostSuccessNotification. 
+                    This layout ensures that employers have all tools and feedback at their fingertips for effective job management.
+                </p>
+                
+                {/* Job Posting Form Section */}
+                <JobPostingForm />
+
+                {/* Job Listing Manager Section */}
+                <JobListingManager />
+
+                {/* Job Post Success Notification Section */}
+                <JobPostSuccessNotification />
             </main>
+
+            {/* Footer section */}
             <Footer />
         </div>
     );

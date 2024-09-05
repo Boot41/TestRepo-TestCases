@@ -5,26 +5,22 @@ import JobPostingForm from '../components/JobPostingForm';
 import JobListingManager from '../components/JobListingManager';
 
 const EmployerDashboard = () => {
-  return (
-    <div className="bg-primaryBackground font-['Roboto', sans-serif] min-h-screen">
-      <Header />
-      
-      <main className="p-medium">
-        <h1 className="text-heading text-24 leading-heading mb-large">Employer Dashboard</h1>
-        <p className="text-body text-14 mb-medium">The EmployerDashboard page will serve as a centralized space for employers, featuring a Header for navigation, a Footer for additional links, the innovative JobPostingForm for entering job details, and a JobListingManager for overseeing all posted jobs.</p>
-        
-        <div className="bg-white shadow-md p-large rounded border border-borderColors mb-large">
-          <JobPostingForm />
+    return (
+        <div className="bg-white min-h-screen font-roboto">
+            <Header />
+            <main className="px-6 py-6">
+                <h1 className="text-2xl font-bold text-gray-800 mb-4">Employer Dashboard</h1>
+                <p className="text-gray-600 mb-6">The EmployerDashboard page provides a holistic job management experience by incorporating essential components, including a Header for navigation, a Footer for supplementary information, a JobPostingForm for creating new listings, and the JobListingManager for overseeing existing postings.</p>
+                <div className="bg-gray-100 p-4 rounded-md shadow-md mb-6">
+                    <JobPostingForm />
+                </div>
+                <div className="bg-gray-100 p-4 rounded-md shadow-md">
+                    <JobListingManager />
+                </div>
+            </main>
+            <Footer />
         </div>
-        
-        <div className="bg-white shadow-md p-large rounded border border-borderColors">
-          <JobListingManager />
-        </div>
-      </main>
-      
-      <Footer />
-    </div>
-  );
+    );
 };
 
 export default EmployerDashboard;

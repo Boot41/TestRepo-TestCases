@@ -27,6 +27,7 @@ function App() {
         </header>
         <Routes>
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+          <Route path="/" element={<div>Home Page</div>} /> {/* Added Home Route */}
         </Routes>
       </div>
     </Router>
